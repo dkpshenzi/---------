@@ -4,3 +4,16 @@
 python 3.10.7
 
 ## 运行
+一、在目录下创建虚拟环境，并激活
+```
+python -m venv your_env_name
+your_env_name\Scripts\activate
+```
+二、安装依赖
+```
+pip install -r requirements.txt
+```
+三、运行
+```
+python app.py
+```
