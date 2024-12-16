@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block title %}View{% endblock %}
+
+{% block content %}
+
+<h2>视图表</h2>
+<br>
+<div class="control-group">
+    <label for="table-select">选择表名：</label>
+    <select id="table-select" class="input-field"></select>
+    <button id="load-table" class="button">加载表格</button>
+</div>
+
+<table id="data-table" class="display" style ="width:100%">
+    <thead>
+        <tr id="table-header"></tr>
+    </thead>
+    <tbody></tbody>
+</thead>
+
+<script src = "{{url_for('static', filename='js/view.js')}}"></script>
+{% endblock %}

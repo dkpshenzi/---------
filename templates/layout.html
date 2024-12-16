@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}{% endblock %}</title>
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+        <!-- Buttons 插件的 CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+        <!-- DataTables 和 Buttons 的 JS -->
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+        <!-- Excel 导出依赖 -->
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    </head>
+    <body class="loggedin">
+        <nav class="navtop">
+            <div>
+                <h1>研究生复试打分系统</h1>
+                <a href="{{ url_for('home') }}"><i class="fas fa-home"></i>主页</a>
+				<a href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i>个人信息</a>
+				<a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>登出</a>
+            </div>
+        </nav>
+        <table class="layout-table">
+            <tr>
+                <!--侧边栏-->
+                <td class="sidebar">
+                    <ul class="menu">
+                        <li><a href="{{url_for('home')}}">基础数据表</a></li>
+                        <li><a href="{{url_for('view')}}">视图表</a></li>
+                    </ul>
+                </td>
+                <!--主体内容-->
+                <td class="content">
+                    {% block content %}{% endblock %}
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

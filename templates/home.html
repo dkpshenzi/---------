@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<h2>基础数据表</h2>
+<br>
+
+<div class="control-group">
+    <label for="table-select">选择表名：</label>
+    <select id="table-select" class="input-field"></select>
+    <button id="load-table" class="button">加载表格</button>
+    <button id="add-btn" class="button">新增数据</button>
+</div>
+
+<table id="data-table" class="display" style ="width:100%">
+    <thead>
+        <tr id="table-header"></tr>
+    </thead>
+    <tbody></tbody>
+</thead>
+
+<!--编辑数据弹窗-->
+<div id="edit-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close-btn" id="edit-close-btn">&times;</span>
+        <h3>编辑数据</h3>
+        <form id="edit-form">
+            <div id="edit-fields"></div>
+            <button type="button" id="save_edit" class="button">保存</button>
+            <button type="button" id="cancel_edit" class="button">取消</button>
+        </form>
+    </div>
+</div>
+
+<!--添加数据弹窗-->
+<div id="add-modal" class="modal" style="display:none;">
+    <div class ="modal-content">
+        <span class="close-btn" id="add-close-btn">&times;</span>
+        <h3>添加数据</h3>
+        <form id="add-form">
+            <div id="add-fields"></div>
+            <button type="button" id="add-data" class="button">新增数据</button>
+        </form>
+    </div>
+</div>
+
+<script src = "{{url_for('static', filename='js/stduentData.js')}}"></script>
+{% endblock %}
