@@ -334,7 +334,7 @@ $("#add-btn").click(async function(){
     const headers = $("#data-table th label").toArray();
     for (const header of headers) {
         const columnName = $(header).text().trim();
-        if ((headers.indexOf(header) === 0 && tableName != "student_view") || columnName === "操作" || forbbiden_columns.includes(columnName)) {
+        if ((headers.indexOf(header) === 0 && tableName != "student_view" && tableName != "teacher_view") || columnName === "操作" || forbbiden_columns.includes(columnName)) {
             // 跳过 id 列，不需要新增数据
             continue;
         }

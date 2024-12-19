@@ -11,7 +11,7 @@
  Target Server Version : 80040 (8.0.40)
  File Encoding         : 65001
 
- Date: 15/12/2024 20:39:02
+ Date: 19/12/2024 23:36:24
 */
 
 SET NAMES utf8mb4;
@@ -26,13 +26,29 @@ CREATE TABLE `batch`  (
   `Batch` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`BatchId`) USING BTREE,
   CONSTRAINT ` batch输入格式检查` CHECK (regexp_like(`Batch`,_utf8mb4'[0-9]{4}-[0-9]{2}'))
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of batch
 -- ----------------------------
 INSERT INTO `batch` VALUES (1, '2024-06');
-INSERT INTO `batch` VALUES (2, '2024-05');
+INSERT INTO `batch` VALUES (2, '2023-06');
+
+-- ----------------------------
+-- Table structure for classroom
+-- ----------------------------
+DROP TABLE IF EXISTS `classroom`;
+CREATE TABLE `classroom`  (
+  `ClassroomId` int NOT NULL AUTO_INCREMENT,
+  `ClassroomName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`ClassroomId`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of classroom
+-- ----------------------------
+INSERT INTO `classroom` VALUES (1, '教120');
+INSERT INTO `classroom` VALUES (2, '阶梯4');
 
 -- ----------------------------
 -- Table structure for department
@@ -58,36 +74,30 @@ CREATE TABLE `interviewscore`  (
   `InterviewScoreId` int NOT NULL AUTO_INCREMENT,
   `StudentId` int NULL DEFAULT NULL,
   `TeacherId` int NULL DEFAULT NULL,
-  `CriteriaId` int NULL DEFAULT NULL,
-  `Score` float NOT NULL DEFAULT 0,
-  `ScoringTime` date NOT NULL,
+  `Score1` float NOT NULL,
+  `Score2` float NOT NULL,
+  `Score3` float NOT NULL,
   PRIMARY KEY (`InterviewScoreId`) USING BTREE,
-  INDEX `StudentId`(`StudentId` ASC) USING BTREE,
-  INDEX `TeacherId`(`TeacherId` ASC) USING BTREE,
-  INDEX `CriteriaId`(`CriteriaId` ASC) USING BTREE,
-  CONSTRAINT `interviewscore_ibfk_1` FOREIGN KEY (`StudentId`) REFERENCES `student` (`StudentId`) ON DELETE SET NULL ON UPDATE RESTRICT,
-  CONSTRAINT `interviewscore_ibfk_2` FOREIGN KEY (`TeacherId`) REFERENCES `teacher` (`TeacherId`) ON DELETE SET NULL ON UPDATE RESTRICT,
-  CONSTRAINT `interviewscore_ibfk_3` FOREIGN KEY (`CriteriaId`) REFERENCES `scoringcriteria` (`CriteriaId`) ON DELETE SET NULL ON UPDATE RESTRICT,
-  CONSTRAINT `分数范围限制` CHECK ((`Score` >= 0) and (`Score` <= 100))
-) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+  INDEX `学生`(`StudentId` ASC) USING BTREE,
+  INDEX `老师`(`TeacherId` ASC) USING BTREE,
+  CONSTRAINT `学生` FOREIGN KEY (`StudentId`) REFERENCES `student` (`StudentId`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `老师` FOREIGN KEY (`TeacherId`) REFERENCES `teacher` (`TeacherId`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of interviewscore
 -- ----------------------------
-INSERT INTO `interviewscore` VALUES (11, 1, 1, 4, 20, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (12, 1, 1, 5, 20, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (13, 1, 1, 6, 20, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (22, 2, 1, 4, 60, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (23, 2, 1, 5, 33, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (24, 2, 1, 6, 66, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (25, 7, 1, 4, 90, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (26, 7, 1, 5, 99, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (27, 7, 1, 6, 88, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (28, 8, 1, 4, 23, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (29, 8, 1, 5, 21, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (30, 8, 1, 6, 23, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (31, 8, 1, 7, 21, '2024-12-15');
-INSERT INTO `interviewscore` VALUES (32, 8, 1, 8, 12, '2024-12-15');
+INSERT INTO `interviewscore` VALUES (1, 2022101895, 1, 20, 30, 50);
+INSERT INTO `interviewscore` VALUES (2, 2022101895, 2, 20, 30, 50);
+INSERT INTO `interviewscore` VALUES (3, 2022101895, 3, 20, 30, 50);
+INSERT INTO `interviewscore` VALUES (4, 2022101895, 4, 20, 30, 50);
+INSERT INTO `interviewscore` VALUES (5, 2022101895, 5, 20, 30, 50);
+INSERT INTO `interviewscore` VALUES (6, 2022101898, 1, 23, 23, 23);
+INSERT INTO `interviewscore` VALUES (7, 2022101898, 2, 23, 23, 23);
+INSERT INTO `interviewscore` VALUES (8, 2022101898, 3, 10, 23, 23);
+INSERT INTO `interviewscore` VALUES (9, 2022101898, 4, 23, 23, 23);
+INSERT INTO `interviewscore` VALUES (10, 2022101898, 5, 23, 23, 23);
+INSERT INTO `interviewscore` VALUES (11, 2022101896, 1, 12, 12, 12);
 
 -- ----------------------------
 -- Table structure for major
@@ -97,38 +107,54 @@ CREATE TABLE `major`  (
   `MajorId` int NOT NULL AUTO_INCREMENT,
   `MajorName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `DepartmentId` int NULL DEFAULT NULL,
-  `IsActive` tinyint NOT NULL DEFAULT 1,
   PRIMARY KEY (`MajorId`) USING BTREE,
   INDEX `DepartmentId`(`DepartmentId` ASC) USING BTREE,
-  CONSTRAINT `major_ibfk_1` FOREIGN KEY (`DepartmentId`) REFERENCES `department` (`DepartmentId`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+  CONSTRAINT `major_ibfk_1` FOREIGN KEY (`DepartmentId`) REFERENCES `department` (`DepartmentId`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of major
 -- ----------------------------
-INSERT INTO `major` VALUES (5, '工业工程', 1, 1);
-INSERT INTO `major` VALUES (6, '自动化', 2, 1);
+INSERT INTO `major` VALUES (1, '工业工程', 1);
+INSERT INTO `major` VALUES (2, '自动化', 2);
+INSERT INTO `major` VALUES (3, '人工智能', 1);
 
 -- ----------------------------
--- Table structure for scoringcriteria
+-- Table structure for schedule
 -- ----------------------------
-DROP TABLE IF EXISTS `scoringcriteria`;
-CREATE TABLE `scoringcriteria`  (
-  `CriteriaId` int NOT NULL AUTO_INCREMENT,
-  `CriteriaName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Detail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '无',
-  `CreateTime` datetime NOT NULL,
-  PRIMARY KEY (`CriteriaId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+DROP TABLE IF EXISTS `schedule`;
+CREATE TABLE `schedule`  (
+  `ScheduleId` int NOT NULL AUTO_INCREMENT,
+  `ClassroomId` int NULL DEFAULT NULL,
+  `BatchId` int NULL DEFAULT NULL,
+  `Teacher1Id` int NULL DEFAULT NULL,
+  `Teacher2Id` int NULL DEFAULT NULL,
+  `Teacher3Id` int NULL DEFAULT NULL,
+  `Teacher4Id` int NULL DEFAULT NULL,
+  `Teacher5Id` int NULL DEFAULT NULL,
+  `StartTime` time NOT NULL,
+  `EndTime` time NOT NULL,
+  `Datetime` date NOT NULL,
+  PRIMARY KEY (`ScheduleId`) USING BTREE,
+  INDEX `schedule_ibfk_1`(`BatchId` ASC) USING BTREE,
+  INDEX `schedule_ibfk_2`(`Teacher1Id` ASC) USING BTREE,
+  INDEX `schedule_ibfk_3`(`Teacher2Id` ASC) USING BTREE,
+  INDEX `schedule_ibfk_4`(`Teacher3Id` ASC) USING BTREE,
+  INDEX `schedule_ibfk_5`(`Teacher4Id` ASC) USING BTREE,
+  INDEX `schedule_ibfk_6`(`ClassroomId` ASC) USING BTREE,
+  CONSTRAINT `schedule_ibfk_1` FOREIGN KEY (`BatchId`) REFERENCES `batch` (`BatchId`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `schedule_ibfk_2` FOREIGN KEY (`Teacher1Id`) REFERENCES `teacher` (`TeacherId`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `schedule_ibfk_3` FOREIGN KEY (`Teacher2Id`) REFERENCES `teacher` (`TeacherId`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `schedule_ibfk_4` FOREIGN KEY (`Teacher3Id`) REFERENCES `teacher` (`TeacherId`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `schedule_ibfk_5` FOREIGN KEY (`Teacher4Id`) REFERENCES `teacher` (`TeacherId`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `schedule_ibfk_6` FOREIGN KEY (`ClassroomId`) REFERENCES `classroom` (`ClassroomId`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of scoringcriteria
+-- Records of schedule
 -- ----------------------------
-INSERT INTO `scoringcriteria` VALUES (4, '外语听说能力', '无', '2024-12-09 16:58:27');
-INSERT INTO `scoringcriteria` VALUES (5, '大学阶段学习情况', '无', '2024-12-15 02:15:09');
-INSERT INTO `scoringcriteria` VALUES (6, '对本学科理论知识和应用技能考查', '无', '2024-12-15 02:34:59');
-INSERT INTO `scoringcriteria` VALUES (7, '创新精神及创新能力', '无', '2024-12-15 16:33:11');
-INSERT INTO `scoringcriteria` VALUES (8, '综合素质和能力', '无', '2024-12-15 16:33:32');
+INSERT INTO `schedule` VALUES (1, 1, 1, 2, 1, 3, 4, 5, '14:30:00', '17:00:00', '2024-12-18');
+INSERT INTO `schedule` VALUES (2, 1, 1, 2, 1, 3, 4, 5, '18:00:00', '19:00:00', '2024-12-18');
 
 -- ----------------------------
 -- Table structure for student
@@ -138,34 +164,29 @@ CREATE TABLE `student`  (
   `StudentId` int NOT NULL AUTO_INCREMENT,
   `StudentName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Gender` enum('男','女') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `UniversityId` int NOT NULL,
+  `University` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `MajorId` int NULL DEFAULT NULL,
   `Status` enum('已报名','笔试完成','面试完成','已录取','未录取') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '已报名',
   `BatchId` int NULL DEFAULT NULL,
   `InitialTestScore` float NOT NULL,
+  `ScheduleId` int NULL DEFAULT NULL,
+  `Contact` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`StudentId`) USING BTREE,
   INDEX `MajorId`(`MajorId` ASC) USING BTREE,
   INDEX `batchid`(`BatchId` ASC) USING BTREE,
-  CONSTRAINT `batchid` FOREIGN KEY (`BatchId`) REFERENCES `batch` (`BatchId`) ON DELETE SET NULL ON UPDATE RESTRICT,
-  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`MajorId`) REFERENCES `major` (`MajorId`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  INDEX `student_ibfk_2`(`ScheduleId` ASC) USING BTREE,
+  CONSTRAINT `batchid` FOREIGN KEY (`BatchId`) REFERENCES `batch` (`BatchId`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`MajorId`) REFERENCES `major` (`MajorId`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `student_ibfk_2` FOREIGN KEY (`ScheduleId`) REFERENCES `schedule` (`ScheduleId`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `初始分取值范围` CHECK ((`InitialTestScore` >= 0) and (`InitialTestScore` <= 100))
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 2022101899 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of student
 -- ----------------------------
-INSERT INTO `student` VALUES (1, 'a', '男', 1, 5, '面试完成', 1, 100);
-INSERT INTO `student` VALUES (2, 'b', '女', 1, 6, '面试完成', 1, 80);
-INSERT INTO `student` VALUES (7, 'c', '女', 1, 5, '面试完成', 1, 100);
-INSERT INTO `student` VALUES (8, 'd', '女', 1, 6, '笔试完成', 1, 100);
-INSERT INTO `student` VALUES (10, 'e', '男', 1, 5, '已报名', 1, 100);
-INSERT INTO `student` VALUES (11, 'f', '女', 1, 6, '已报名', 1, 50);
-INSERT INTO `student` VALUES (12, 'g', '男', 1, 5, '已报名', 1, 100);
-INSERT INTO `student` VALUES (13, 'h', '女', 1, 5, '已报名', 1, 50);
-INSERT INTO `student` VALUES (14, 'i', '女', 1, 5, '已报名', 1, 70);
-INSERT INTO `student` VALUES (16, 'j', '女', 1, 5, '已报名', 1, 60);
-INSERT INTO `student` VALUES (24, 'k', '女', 1, 5, '已报名', 1, 20);
-INSERT INTO `student` VALUES (25, 'l', '男', 2, 5, '已报名', 1, 100);
+INSERT INTO `student` VALUES (2022101895, '陈俊杰', '男', '暨南大学', 1, '未录取', 1, 100, 1, '18929115532');
+INSERT INTO `student` VALUES (2022101896, '莫谦', '男', '暨南大学', 1, '笔试完成', 1, 100, 1, '15817618354');
+INSERT INTO `student` VALUES (2022101898, '林志康', '男', '暨南大学', 1, '已录取', 1, 100, 1, '12345678');
 
 -- ----------------------------
 -- Table structure for teacher
@@ -177,22 +198,27 @@ CREATE TABLE `teacher`  (
   `Gender` enum('男','女') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `DepartmentId` int NULL DEFAULT NULL,
   `Title` enum('教授','副教授','讲师','助教') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `IsActive` tinyint NOT NULL DEFAULT 1,
   `Contact` int NOT NULL,
+  `isPolitics` tinyint NULL DEFAULT 0,
   PRIMARY KEY (`TeacherId`) USING BTREE,
   INDEX `DepartmentId`(`DepartmentId` ASC) USING BTREE,
-  CONSTRAINT `teacher_ibfk_1` FOREIGN KEY (`DepartmentId`) REFERENCES `department` (`DepartmentId`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+  CONSTRAINT `teacher_ibfk_1` FOREIGN KEY (`DepartmentId`) REFERENCES `department` (`DepartmentId`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of teacher
 -- ----------------------------
-INSERT INTO `teacher` VALUES (1, 'a', '男', 1, '教授', 1, 0);
-INSERT INTO `teacher` VALUES (2, 'b', '男', 1, '教授', 1, 0);
-INSERT INTO `teacher` VALUES (3, 'c', '女', 1, '副教授', 1, 0);
-INSERT INTO `teacher` VALUES (4, 'd', '女', 2, '副教授', 1, 0);
-INSERT INTO `teacher` VALUES (5, 'e', '女', 1, '讲师', 1, 0);
-INSERT INTO `teacher` VALUES (6, 'f', '女', 2, '教授', 2, 0);
+INSERT INTO `teacher` VALUES (1, '里涡阳', '男', 1, '讲师', 123456789, 0);
+INSERT INTO `teacher` VALUES (2, '冯家辉', '男', 1, '教授', 12345678, 1);
+INSERT INTO `teacher` VALUES (3, '曹厚泽', '男', 1, '教授', 12345678, 0);
+INSERT INTO `teacher` VALUES (4, '张世豪', '男', 1, '教授', 12345678, 0);
+INSERT INTO `teacher` VALUES (5, '韩烨', '男', 1, '教授', 12345678, 0);
+INSERT INTO `teacher` VALUES (6, '中维系', '男', 1, '教授', 12345678, 0);
+INSERT INTO `teacher` VALUES (7, '逼格多动', '男', 2, '教授', 12345678, 0);
+INSERT INTO `teacher` VALUES (8, '离谱', '男', 2, '教授', 12345678, 0);
+INSERT INTO `teacher` VALUES (9, '状态值', '男', 2, '教授', 12345678, 1);
+INSERT INTO `teacher` VALUES (10, '小河', '男', 2, '教授', 12345678, 0);
+INSERT INTO `teacher` VALUES (11, '秀珍', '女', 2, '教授', 12345678, 0);
 
 -- ----------------------------
 -- Table structure for user
@@ -211,10 +237,10 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'Worker', 'dkp', '1', '2024-12-14 23:19:10', '1@qq.com');
+INSERT INTO `user` VALUES (1, 'Worker', 'dkp', '1', '2024-12-14 23:19:10', '1017975495@qq.com');
 INSERT INTO `user` VALUES (2, 'Admin', 'dkpzi', '1', '2024-12-14 22:52:18', '1@qq.com');
-INSERT INTO `user` VALUES (13, 'Admin', 'Aimer', 'Aimer', '2024-12-15 01:10:07', 'aimer@qq.com');
-INSERT INTO `user` VALUES (14, 'Admin', 'dyj', '1', '2024-12-15 15:02:49', '1@qq.com');
+INSERT INTO `user` VALUES (3, 'Admin', 'Aimer', 'Aimer', '2024-12-19 15:15:25', 'aimer@qq.com');
+INSERT INTO `user` VALUES (4, 'Admin', 'dyj', '1', '2024-12-19 15:15:28', '1453983805@qq.com');
 
 -- ----------------------------
 -- Table structure for weight
@@ -225,14 +251,17 @@ CREATE TABLE `weight`  (
   `WeightName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Weight` double NOT NULL,
   PRIMARY KEY (`WeightId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of weight
 -- ----------------------------
 INSERT INTO `weight` VALUES (1, '初试权重', 0.7);
-INSERT INTO `weight` VALUES (2, '复试笔试权重', 0.1);
-INSERT INTO `weight` VALUES (3, '复试面试权重', 0.2);
+INSERT INTO `weight` VALUES (2, '复试笔试权重', 0.2);
+INSERT INTO `weight` VALUES (3, '复试面试政治分权重', 0.5);
+INSERT INTO `weight` VALUES (4, '复试面试其他权重', 0.5);
+INSERT INTO `weight` VALUES (5, '复试面试权重', 0.1);
+INSERT INTO `weight` VALUES (6, '通过分数', 60);
 
 -- ----------------------------
 -- Table structure for writtentestscore
@@ -242,64 +271,106 @@ CREATE TABLE `writtentestscore`  (
   `WrittenTestScoreId` int NOT NULL AUTO_INCREMENT,
   `StudentId` int NULL DEFAULT NULL,
   `Score` float NOT NULL DEFAULT 0,
-  `Time` date NOT NULL,
   PRIMARY KEY (`WrittenTestScoreId`) USING BTREE,
   INDEX `StudentId`(`StudentId` ASC) USING BTREE,
-  CONSTRAINT `writtentestscore_ibfk_1` FOREIGN KEY (`StudentId`) REFERENCES `student` (`StudentId`) ON DELETE SET NULL ON UPDATE RESTRICT,
-  CONSTRAINT `分数取值范围` CHECK ((`Score` >= 0) and (`Score` <= 100))
-) ENGINE = InnoDB AUTO_INCREMENT = 79 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+  CONSTRAINT `writtentestscore_ibfk_1` FOREIGN KEY (`StudentId`) REFERENCES `student` (`StudentId`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 84 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of writtentestscore
 -- ----------------------------
-INSERT INTO `writtentestscore` VALUES (75, 1, 50, '2024-12-15');
-INSERT INTO `writtentestscore` VALUES (76, 2, 90, '2024-12-15');
-INSERT INTO `writtentestscore` VALUES (77, 7, 90, '2024-12-15');
-INSERT INTO `writtentestscore` VALUES (78, 8, 96, '2024-12-15');
+INSERT INTO `writtentestscore` VALUES (1, NULL, 100);
+INSERT INTO `writtentestscore` VALUES (2, 2022101896, 60);
+INSERT INTO `writtentestscore` VALUES (3, 2022101898, 90);
+INSERT INTO `writtentestscore` VALUES (4, 2022101895, 100);
 
 -- ----------------------------
 -- View structure for interviewscore_view
 -- ----------------------------
 DROP VIEW IF EXISTS `interviewscore_view`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `interviewscore_view` AS select `i`.`InterviewScoreId` AS `InterviewScoreId`,`i`.`StudentId` AS `StudentId`,`s`.`StudentName` AS `StudentName`,`i`.`TeacherId` AS `TeacherId`,`t`.`TeacherName` AS `TeacherName`,`c`.`CriteriaName` AS `CriteriaName`,`i`.`Score` AS `Score`,`i`.`ScoringTime` AS `ScoringTime`,`b`.`Batch` AS `Batch` from ((((`interviewscore` `i` join `student` `s` on((`i`.`StudentId` = `s`.`StudentId`))) join `teacher` `t` on((`i`.`TeacherId` = `t`.`TeacherId`))) join `scoringcriteria` `c` on((`i`.`CriteriaId` = `c`.`CriteriaId`))) join `batch` `b` on((`s`.`BatchId` = `b`.`BatchId`)));
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `interviewscore_view` AS select `i`.`InterviewScoreId` AS `InterviewScoreId`,`i`.`StudentId` AS `StudentId`,`s`.`StudentName` AS `StudentName`,`i`.`TeacherId` AS `TeacherId`,`t`.`TeacherName` AS `TeacherName`,`i`.`Score1` AS `Score1`,`i`.`Score2` AS `Score2`,`i`.`Score3` AS `Score3`,`b`.`Batch` AS `Batch` from (((`interviewscore` `i` join `student` `s` on((`i`.`StudentId` = `s`.`StudentId`))) join `teacher` `t` on((`i`.`TeacherId` = `t`.`TeacherId`))) join `batch` `b` on((`s`.`BatchId` = `b`.`BatchId`)));
 
 -- ----------------------------
 -- View structure for major_view
 -- ----------------------------
 DROP VIEW IF EXISTS `major_view`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `major_view` AS select `m`.`MajorId` AS `MajorId`,`m`.`MajorName` AS `MajorName`,`d`.`DepartmentName` AS `DepartmentName`,`m`.`IsActive` AS `IsActive` from (`major` `m` join `department` `d` on((`m`.`DepartmentId` = `d`.`DepartmentId`)));
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `major_view` AS select `m`.`MajorId` AS `MajorId`,`m`.`MajorName` AS `MajorName`,`d`.`DepartmentName` AS `DepartmentName` from (`major` `m` join `department` `d` on((`m`.`DepartmentId` = `d`.`DepartmentId`)));
+
+-- ----------------------------
+-- View structure for schedule_view
+-- ----------------------------
+DROP VIEW IF EXISTS `schedule_view`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `schedule_view` AS select `sc`.`ScheduleId` AS `ScheduleId`,`c`.`ClassroomName` AS `ClassroomName`,`b`.`Batch` AS `Batch`,`sc`.`Teacher1Id` AS `Teacher1Id`,`sc`.`Teacher2Id` AS `Teacher2Id`,`sc`.`Teacher3Id` AS `Teacher3Id`,`sc`.`Teacher4Id` AS `Teacher4Id`,`sc`.`Teacher5Id` AS `Teacher5Id`,`t1`.`TeacherName` AS `Teacher1Name`,`t2`.`TeacherName` AS `Teacher2Name`,`t3`.`TeacherName` AS `Teacher3Name`,`t4`.`TeacherName` AS `Teacher4Name`,`t5`.`TeacherName` AS `Teacher5Name`,`sc`.`StartTime` AS `StartTime`,`sc`.`EndTime` AS `EndTime`,`sc`.`Datetime` AS `Datetime` from (((((((`schedule` `sc` join `classroom` `c` on((`sc`.`ClassroomId` = `c`.`ClassroomId`))) join `batch` `b` on((`sc`.`BatchId` = `b`.`BatchId`))) join `teacher` `t1` on((`sc`.`Teacher1Id` = `t1`.`TeacherId`))) join `teacher` `t2` on((`sc`.`Teacher2Id` = `t2`.`TeacherId`))) join `teacher` `t3` on((`sc`.`Teacher3Id` = `t3`.`TeacherId`))) join `teacher` `t4` on((`sc`.`Teacher4Id` = `t4`.`TeacherId`))) join `teacher` `t5` on((`sc`.`Teacher5Id` = `t5`.`TeacherId`)));
 
 -- ----------------------------
 -- View structure for student_view
 -- ----------------------------
 DROP VIEW IF EXISTS `student_view`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `student_view` AS select `s`.`StudentId` AS `StudentId`,`s`.`StudentName` AS `StudentName`,`s`.`Gender` AS `Gender`,`s`.`UniversityId` AS `UniversityId`,`m`.`MajorName` AS `MajorName`,`s`.`Status` AS `Status`,`b`.`Batch` AS `Batch`,`s`.`InitialTestScore` AS `InitialTestScore` from ((`student` `s` join `major` `m` on((`s`.`MajorId` = `m`.`MajorId`))) join `batch` `b` on((`s`.`BatchId` = `b`.`BatchId`)));
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `student_view` AS select `s`.`StudentId` AS `StudentId`,`s`.`StudentName` AS `StudentName`,`s`.`Gender` AS `Gender`,`s`.`University` AS `University`,`s`.`Contact` AS `Contact`,`m`.`MajorName` AS `MajorName`,`s`.`Status` AS `Status`,`b`.`Batch` AS `Batch`,`s`.`InitialTestScore` AS `InitialTestScore`,`s`.`ScheduleId` AS `ScheduleId`,`c`.`ClassroomName` AS `ClassroomName`,`sc`.`Datetime` AS `Datetime` from ((((`student` `s` join `major` `m` on((`s`.`MajorId` = `m`.`MajorId`))) join `batch` `b` on((`s`.`BatchId` = `b`.`BatchId`))) join `schedule` `sc` on((`s`.`ScheduleId` = `sc`.`ScheduleId`))) join `classroom` `c` on((`sc`.`ClassroomId` = `c`.`ClassroomId`)));
 
 -- ----------------------------
 -- View structure for teacher_view
 -- ----------------------------
 DROP VIEW IF EXISTS `teacher_view`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `teacher_view` AS select `t`.`TeacherId` AS `TeacherId`,`t`.`TeacherName` AS `TeacherName`,`t`.`Gender` AS `Gender`,`d`.`DepartmentName` AS `DepartmentName`,`t`.`Title` AS `Title`,`t`.`IsActive` AS `IsActive`,`t`.`Contact` AS `Contact` from (`teacher` `t` join `department` `d` on((`t`.`DepartmentId` = `d`.`DepartmentId`)));
-
--- ----------------------------
--- View structure for totalscoreview
--- ----------------------------
-DROP VIEW IF EXISTS `totalscoreview`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `totalscoreview` AS select `student_score`.`StudentId` AS `StudentId`,`student_score`.`StudentName` AS `StudentName`,`student_score`.`DepartmentName` AS `DepartmentName`,`student_score`.`MajorName` AS `MajorName`,`student_score`.`InitialTestScore` AS `InitialTestScore`,`student_score`.`WrittenTestScore` AS `WrittenTestScore`,`interview_score`.`InterviewScore` AS `InterviewScore`,round((((`weight1`.`Weight` * `student_score`.`InitialTestScore`) + (`weight2`.`Weight` * `student_score`.`WrittenTestScore`)) + (`weight3`.`Weight` * `interview_score`.`InterviewScore`)),2) AS `TotalScore`,(case when (round((((`weight1`.`Weight` * `student_score`.`InitialTestScore`) + (`weight2`.`Weight` * `student_score`.`WrittenTestScore`)) + (`weight3`.`Weight` * `interview_score`.`InterviewScore`)),2) > 50) then 'Yes' else 'No' end) AS `IsPassed` from (((((select `student_list1`.`StudentId` AS `StudentId`,`student_list1`.`StudentName` AS `StudentName`,`student_list2`.`DepartmentName` AS `DepartmentName`,`student_list2`.`MajorName` AS `MajorName`,`student_list1`.`InitialTestScore` AS `InitialTestScore`,`student_list1`.`WrittenTestScore` AS `WrittenTestScore`,`student_list1`.`Status` AS `Status` from ((select `student`.`StudentId` AS `StudentId`,`student`.`StudentName` AS `StudentName`,`student`.`MajorId` AS `MajorId`,`student`.`InitialTestScore` AS `InitialTestScore`,`writtentestscore`.`Score` AS `WrittenTestScore`,`student`.`Status` AS `Status` from (`student` left join `writtentestscore` on((`student`.`StudentId` = `writtentestscore`.`StudentId`)))) `student_list1` join (select `major`.`MajorId` AS `MajorId`,`major`.`MajorName` AS `MajorName`,`department`.`DepartmentName` AS `DepartmentName` from (`major` join `department` on((`major`.`DepartmentId` = `department`.`DepartmentId`)))) `student_list2` on((`student_list1`.`MajorId` = `student_list2`.`MajorId`)))) `student_score` left join (select `interviewscore`.`StudentId` AS `StudentId`,round(avg(`interviewscore`.`Score`),2) AS `InterviewScore` from `interviewscore` group by `interviewscore`.`StudentId`) `interview_score` on((`student_score`.`StudentId` = `interview_score`.`StudentId`))) join (select `weight`.`Weight` AS `Weight` from `weight` where (`weight`.`WeightName` = '初试权重')) `weight1` on((1 = 1))) join (select `weight`.`Weight` AS `Weight` from `weight` where (`weight`.`WeightName` = '复试笔试权重')) `weight2` on((1 = 1))) join (select `weight`.`Weight` AS `Weight` from `weight` where (`weight`.`WeightName` = '复试面试权重')) `weight3` on((1 = 1))) where (`student_score`.`Status` = '面试完成');
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `teacher_view` AS select `t`.`TeacherId` AS `TeacherId`,`t`.`TeacherName` AS `TeacherName`,`t`.`Gender` AS `Gender`,`d`.`DepartmentName` AS `DepartmentName`,`t`.`Title` AS `Title`,`t`.`Contact` AS `Contact`,`t`.`isPolitics` AS `isPolitics` from (`teacher` `t` join `department` `d` on((`t`.`DepartmentId` = `d`.`DepartmentId`)));
 
 -- ----------------------------
 -- View structure for writtentestscore_view
 -- ----------------------------
 DROP VIEW IF EXISTS `writtentestscore_view`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `writtentestscore_view` AS select `w`.`WrittenTestScoreId` AS `WrittenTestScoreId`,`w`.`StudentId` AS `StudentId`,`s`.`StudentName` AS `StudentName`,`w`.`Score` AS `Score`,`w`.`Time` AS `Time`,`b`.`Batch` AS `Batch` from ((`writtentestscore` `w` join `student` `s` on((`s`.`StudentId` = `w`.`StudentId`))) join `batch` `b` on((`s`.`BatchId` = `b`.`BatchId`)));
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `writtentestscore_view` AS select `w`.`WrittenTestScoreId` AS `WrittenTestScoreId`,`w`.`StudentId` AS `StudentId`,`s`.`StudentName` AS `StudentName`,`w`.`Score` AS `Score`,`b`.`Batch` AS `Batch` from ((`writtentestscore` `w` join `student` `s` on((`s`.`StudentId` = `w`.`StudentId`))) join `batch` `b` on((`s`.`BatchId` = `b`.`BatchId`)));
 
 -- ----------------------------
--- Triggers structure for table interviewscore
+-- View structure for 总分表
 -- ----------------------------
-DROP TRIGGER IF EXISTS `scoring_time`;
+DROP VIEW IF EXISTS `总分表`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `总分表` AS select `batch`.`Batch` AS `Batch`,`department`.`DepartmentName` AS `DepartmentName`,`major`.`MajorName` AS `MajorName`,`student`.`StudentId` AS `StudentId`,`student`.`StudentName` AS `StudentName`,`student`.`InitialTestScore` AS `初试分`,`writtentestscore`.`Score` AS `笔试分`,`politescore`.`面试政治分` AS `面试政治分`,`elsescore`.`面试其他分` AS `面试其他分`,((`weight1`.`w3` * `politescore`.`面试政治分`) + (`weight1`.`w4` * `elsescore`.`面试其他分`)) AS `面试总分`,round((((`weight1`.`w1` * `student`.`InitialTestScore`) + (`weight1`.`w2` * `writtentestscore`.`Score`)) + (`weight1`.`w5` * ((`weight1`.`w3` * `politescore`.`面试政治分`) + (`weight1`.`w4` * `elsescore`.`面试其他分`)))),2) AS `总分`,(case when (round((((`weight1`.`w1` * `student`.`InitialTestScore`) + (`weight1`.`w2` * `writtentestscore`.`Score`)) + (`weight1`.`w5` * ((`weight1`.`w3` * `politescore`.`面试政治分`) + (`weight1`.`w4` * `elsescore`.`面试其他分`)))),2) >= `weight1`.`w6`) then 'Yes' else 'No' end) AS `是否通过` from (((((((`student` join `batch` on((`student`.`BatchId` = `batch`.`BatchId`))) join `major` on((`major`.`MajorId` = `student`.`MajorId`))) join `department` on((`major`.`DepartmentId` = `department`.`DepartmentId`))) join `writtentestscore` on((`student`.`StudentId` = `writtentestscore`.`StudentId`))) join (select `interviewscore`.`StudentId` AS `StudentId`,((`interviewscore`.`Score1` + `interviewscore`.`Score2`) + `interviewscore`.`Score3`) AS `面试政治分` from (`interviewscore` join `teacher` on((`interviewscore`.`TeacherId` = `teacher`.`TeacherId`))) where (`teacher`.`isPolitics` = 1)) `politescore` on((`student`.`StudentId` = `politescore`.`StudentId`))) join (select `interviewscore`.`StudentId` AS `StudentId`,((avg(`interviewscore`.`Score1`) + avg(`interviewscore`.`Score2`)) + avg(`interviewscore`.`Score3`)) AS `面试其他分` from (`interviewscore` join `teacher` on((`interviewscore`.`TeacherId` = `teacher`.`TeacherId`))) where (`teacher`.`isPolitics` = 0) group by `interviewscore`.`StudentId`) `elsescore` on((`student`.`StudentId` = `elsescore`.`StudentId`))) join (select max((case when (`weight`.`WeightName` = '初试权重') then `weight`.`Weight` end)) AS `w1`,max((case when (`weight`.`WeightName` = '复试笔试权重') then `weight`.`Weight` end)) AS `w2`,max((case when (`weight`.`WeightName` = '复试面试政治分权重') then `weight`.`Weight` end)) AS `w3`,max((case when (`weight`.`WeightName` = '复试面试其他权重') then `weight`.`Weight` end)) AS `w4`,max((case when (`weight`.`WeightName` = '复试面试权重') then `weight`.`Weight` end)) AS `w5`,max((case when (`weight`.`WeightName` = '通过分数') then `weight`.`Weight` end)) AS `w6` from `weight`) `weight1` on((1 = 1)));
+
+
+-- ----------------------------
+-- View structure for 专业平均分表
+-- ----------------------------
+DROP VIEW IF EXISTS `专业平均分表`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `专业平均分表` AS select `总分表`.`Batch` AS `Batch`,`总分表`.`DepartmentName` AS `DepartmentName`,`总分表`.`MajorName` AS `MajorName`,avg(`总分表`.`初试分`) AS `平均初试分`,avg(`总分表`.`面试政治分`) AS `平均政治分`,avg(`总分表`.`面试其他分`) AS `平均其他分`,avg(`总分表`.`面试总分`) AS `平均面试总分`,avg(`总分表`.`总分`) AS `平均总分` from `总分表` group by `总分表`.`Batch`,`总分表`.`MajorName`,`总分表`.`DepartmentName`;
+
+-- ----------------------------
+-- View structure for 专业录取率表
+-- ----------------------------
+DROP VIEW IF EXISTS `专业录取率表`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `专业录取率表` AS select `student_status`.`Batch` AS `Batch`,`departmentmajor`.`DepartmentName` AS `DepartmentName`,`departmentmajor`.`MajorName` AS `MajorName`,`student_status`.`录取率` AS `录取率` from ((select `student`.`MajorId` AS `MajorId`,`student`.`BatchId` AS `BatchId`,`batch`.`Batch` AS `Batch`,concat((round((sum((`student`.`Status` = '已录取')) / (sum((`student`.`Status` = '已录取')) + sum((`student`.`Status` = '未录取')))),2) * 100),'%') AS `录取率` from (`student` join `batch` on((`student`.`BatchId` = `batch`.`BatchId`))) group by `student`.`MajorId`,`batch`.`BatchId`) `student_status` join (select `major`.`MajorId` AS `MajorId`,`major`.`MajorName` AS `MajorName`,`department`.`DepartmentName` AS `DepartmentName` from (`major` join `department` on((`major`.`DepartmentId` = `department`.`DepartmentId`)))) `departmentmajor` on((`student_status`.`MajorId` = `departmentmajor`.`MajorId`))) where (`student_status`.`录取率` is not null);
+
+-- ----------------------------
+-- Triggers structure for table department
+-- ----------------------------
+DROP TRIGGER IF EXISTS `学院的名称不能重复——插入`;
 delimiter ;;
-CREATE TRIGGER `scoring_time` BEFORE INSERT ON `interviewscore` FOR EACH ROW BEGIN
-	SET NEW.ScoringTime = NOW();
+CREATE TRIGGER `学院的名称不能重复——插入` BEFORE INSERT ON `department` FOR EACH ROW BEGIN
+	IF EXISTS (
+		SELECT *
+		FROM department d
+		WHERE d.DepartmentName = NEW.DepartmentName
+	)THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '学院名称重复';
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table department
+-- ----------------------------
+DROP TRIGGER IF EXISTS `学院的名称不能重复——更新`;
+delimiter ;;
+CREATE TRIGGER `学院的名称不能重复——更新` BEFORE UPDATE ON `department` FOR EACH ROW BEGIN
+	IF EXISTS (
+		SELECT *
+		FROM department d
+		WHERE d.DepartmentName = NEW.DepartmentName AND OLD.DepartmentId != d.DepartmentId
+	)THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '学院名称重复';
+	END IF;
 END
 ;;
 delimiter ;
@@ -307,9 +378,9 @@ delimiter ;
 -- ----------------------------
 -- Triggers structure for table interviewscore
 -- ----------------------------
-DROP TRIGGER IF EXISTS `笔试了才能面试`;
+DROP TRIGGER IF EXISTS `只有当笔试通过了才能填写面试的`;
 delimiter ;;
-CREATE TRIGGER `笔试了才能面试` BEFORE INSERT ON `interviewscore` FOR EACH ROW BEGIN
+CREATE TRIGGER `只有当笔试通过了才能填写面试的` BEFORE INSERT ON `interviewscore` FOR EACH ROW BEGIN
 	IF NOT EXISTS(
 		SELECT 1
 		FROM student s
@@ -323,12 +394,275 @@ END
 delimiter ;
 
 -- ----------------------------
--- Triggers structure for table scoringcriteria
+-- Triggers structure for table interviewscore
 -- ----------------------------
-DROP TRIGGER IF EXISTS `自动填充时间`;
+DROP TRIGGER IF EXISTS `只能输入给你打分的那个老师`;
 delimiter ;;
-CREATE TRIGGER `自动填充时间` BEFORE INSERT ON `scoringcriteria` FOR EACH ROW BEGIN
-	SET NEW.CreateTime = NOW();
+CREATE TRIGGER `只能输入给你打分的那个老师` BEFORE INSERT ON `interviewscore` FOR EACH ROW BEGIN
+	DECLARE t1id INT;
+	DECLARE t2id INT;
+	DECLARE t3id INT;
+	DECLARE t4id INT;
+	DECLARE t5id INT;
+	DECLARE scheduleid INT;
+
+	-- 获取学生的 ScheduleId
+	SELECT student.ScheduleId INTO scheduleid 
+	FROM student 
+	WHERE NEW.StudentId = student.StudentId;
+
+	-- 获取教师 ID
+	SELECT Teacher1Id, Teacher2Id, Teacher3Id, Teacher4Id, Teacher5Id
+	INTO t1id, t2id, t3id, t4id, t5id
+	FROM `schedule` sc 
+	WHERE sc.ScheduleId = scheduleid;
+
+	-- 判断教师是否未评分
+	IF NEW.TeacherId != t1id AND NEW.TeacherId != t2id AND NEW.TeacherId != t3id AND NEW.TeacherId != t4id AND NEW.TeacherId != t5id THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = '该老师未给学生评分';
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table interviewscore
+-- ----------------------------
+DROP TRIGGER IF EXISTS `一个老师只能打一次分——插入`;
+delimiter ;;
+CREATE TRIGGER `一个老师只能打一次分——插入` BEFORE INSERT ON `interviewscore` FOR EACH ROW BEGIN
+	IF EXISTS(
+		SELECT *
+		FROM interviewscore
+		WHERE interviewscore.StudentId = NEW.StudentId AND interviewscore.TeacherId = NEW.TeacherId
+	)THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = '该老师已经评过分了';
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table interviewscore
+-- ----------------------------
+DROP TRIGGER IF EXISTS `面试超过5条则为评分完成`;
+delimiter ;;
+CREATE TRIGGER `面试超过5条则为评分完成` AFTER INSERT ON `interviewscore` FOR EACH ROW BEGIN
+	DECLARE count_num INT;
+	SELECT COUNT(*) INTO count_num
+	FROM interviewscore i
+	WHERE i.StudentId = NEW.StudentId;
+	
+	IF count_num = 5 THEN
+		UPDATE student s
+		SET s.Status = '面试完成'
+		WHERE s.StudentId = NEW.StudentId;
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table interviewscore
+-- ----------------------------
+DROP TRIGGER IF EXISTS `更新只能输入给你打分的老师`;
+delimiter ;;
+CREATE TRIGGER `更新只能输入给你打分的老师` BEFORE UPDATE ON `interviewscore` FOR EACH ROW BEGIN
+	DECLARE t1id INT;
+	DECLARE t2id INT;
+	DECLARE t3id INT;
+	DECLARE t4id INT;
+	DECLARE t5id INT;
+	DECLARE scheduleid INT;
+
+	-- 获取学生的 ScheduleId
+	SELECT student.ScheduleId INTO scheduleid 
+	FROM student 
+	WHERE NEW.StudentId = student.StudentId;
+
+	-- 获取教师 ID
+	SELECT Teacher1Id, Teacher2Id, Teacher3Id, Teacher4Id, Teacher5Id
+	INTO t1id, t2id, t3id, t4id, t5id
+	FROM `schedule` sc 
+	WHERE sc.ScheduleId = scheduleid;
+
+	-- 判断教师是否未评分
+	IF NEW.TeacherId != t1id AND NEW.TeacherId != t2id AND NEW.TeacherId != t3id AND NEW.TeacherId != t4id AND NEW.TeacherId != t5id THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = '该老师未给学生评分';
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table interviewscore
+-- ----------------------------
+DROP TRIGGER IF EXISTS `一个老师只能打一次份——更新`;
+delimiter ;;
+CREATE TRIGGER `一个老师只能打一次份——更新` BEFORE UPDATE ON `interviewscore` FOR EACH ROW BEGIN
+	DECLARE num INT DEFAULT 0;
+	DECLARE existing_id INT DEFAULT NULL;
+	
+	SELECT COUNT(*) INTO num
+	FROM interviewscore
+	WHERE interviewscore.StudentId = NEW.StudentId AND interviewscore.TeacherId = NEW.TeacherId AND OLD.InterviewScoreId != interviewscore.InterviewScoreId;
+
+	IF num > 0 THEN
+		SELECT InterviewScoreId INTO existing_id
+		FROM interviewscore
+		WHERE interviewscore.StudentId = NEW.StudentId AND interviewscore.TeacherId = NEW.TeacherId
+		LIMIT 1;
+	END IF;
+
+	-- 检查是否重复评分
+	IF num = 1 AND existing_id != NEW.InterviewScoreId THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = '该老师已经评过分了';
+	END IF;
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table major
+-- ----------------------------
+DROP TRIGGER IF EXISTS `专业的名称不能重复——插入`;
+delimiter ;;
+CREATE TRIGGER `专业的名称不能重复——插入` BEFORE INSERT ON `major` FOR EACH ROW BEGIN
+	IF EXISTS (
+		SELECT *
+		FROM major
+		WHERE major.MajorName = NEW.MajorName
+	)THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '专业名称重复';
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table major
+-- ----------------------------
+DROP TRIGGER IF EXISTS `专业的名称不能重复——更新`;
+delimiter ;;
+CREATE TRIGGER `专业的名称不能重复——更新` BEFORE UPDATE ON `major` FOR EACH ROW BEGIN
+	IF EXISTS (
+		SELECT *
+		FROM major m
+		WHERE m.MajorName = NEW.MajorName AND OLD.MajorId != m.MajorId
+	)THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '专业名称重复';
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table schedule
+-- ----------------------------
+DROP TRIGGER IF EXISTS `第一个老师是政治老师——插入`;
+delimiter ;;
+CREATE TRIGGER `第一个老师是政治老师——插入` BEFORE INSERT ON `schedule` FOR EACH ROW BEGIN
+	DECLARE ispolitics INT;
+	SELECT teacher.isPolitics INTO ispolitics
+	FROM teacher
+	WHERE teacher.TeacherId = NEW.Teacher1Id;
+	IF ispolitics != 1 THEN
+		SIGNAL SQLSTATE '45000'
+	  SET MESSAGE_TEXT = '该位老师不是政治老师';
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table schedule
+-- ----------------------------
+DROP TRIGGER IF EXISTS `排班冲突——插入`;
+delimiter ;;
+CREATE TRIGGER `排班冲突——插入` BEFORE INSERT ON `schedule` FOR EACH ROW BEGIN
+	IF EXISTS (
+		SELECT * 
+		FROM schedule s
+		WHERE s.ClassroomId = NEW.ClassroomId AND s.Datetime = NEW.Datetime 
+			AND NOT (NEW.EndTime <= s.StartTime OR NEW.StartTime >= s.EndTime)
+	)THEN
+		SIGNAL SQLSTATE "45000"
+		SET message_text = '排班时间冲突';
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table schedule
+-- ----------------------------
+DROP TRIGGER IF EXISTS `本身时间冲突——插入`;
+delimiter ;;
+CREATE TRIGGER `本身时间冲突——插入` BEFORE INSERT ON `schedule` FOR EACH ROW BEGIN 
+	IF NEW.StartTime >= NEW.EndTime THEN
+		SIGNAL SQLSTATE "45000"
+		SET message_text = "开始时间比结束时间晚";
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table schedule
+-- ----------------------------
+DROP TRIGGER IF EXISTS `第一个老师是政治老师——更新`;
+delimiter ;;
+CREATE TRIGGER `第一个老师是政治老师——更新` BEFORE UPDATE ON `schedule` FOR EACH ROW BEGIN
+	DECLARE ispolitics INT;
+	SELECT teacher.isPolitics INTO ispolitics
+	FROM teacher
+	WHERE teacher.TeacherId = NEW.Teacher1Id;
+	IF ispolitics != 1 THEN
+		SIGNAL SQLSTATE '45000'
+	  SET MESSAGE_TEXT = '该位老师不是政治老师';
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table schedule
+-- ----------------------------
+DROP TRIGGER IF EXISTS `排班冲突——更新`;
+delimiter ;;
+CREATE TRIGGER `排班冲突——更新` BEFORE UPDATE ON `schedule` FOR EACH ROW BEGIN
+	IF EXISTS (
+		SELECT * 
+		FROM schedule s
+		WHERE s.ClassroomId = NEW.ClassroomId 
+			AND s.Datetime = NEW.Datetime 
+			AND NOT (NEW.EndTime <= s.StartTime OR NEW.StartTime >= s.EndTime)
+			AND OLD.ScheduleId != s.ScheduleId
+	)THEN
+		SIGNAL SQLSTATE "45000"
+		SET message_text = NEW.ScheduleId;
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table schedule
+-- ----------------------------
+DROP TRIGGER IF EXISTS `本身时间冲突——更新`;
+delimiter ;;
+CREATE TRIGGER `本身时间冲突——更新` BEFORE UPDATE ON `schedule` FOR EACH ROW BEGIN 
+	IF NEW.StartTime >= NEW.EndTime THEN
+		SIGNAL SQLSTATE "45000"
+		SET message_text = "开始时间比结束时间晚";
+	END IF;
 END
 ;;
 delimiter ;
@@ -345,12 +679,37 @@ END
 delimiter ;
 
 -- ----------------------------
--- Triggers structure for table writtentestscore
+-- Triggers structure for table user
 -- ----------------------------
-DROP TRIGGER IF EXISTS `before_insert_writtentestscore`;
+DROP TRIGGER IF EXISTS `用户名不能重复——插入`;
 delimiter ;;
-CREATE TRIGGER `before_insert_writtentestscore` BEFORE INSERT ON `writtentestscore` FOR EACH ROW BEGIN
-    SET NEW.Time = NOW();
+CREATE TRIGGER `用户名不能重复——插入` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
+	IF EXISTS (
+		SELECT *
+		FROM user u
+		WHERE u.Account = NEW.Account
+	)THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '用户名称重复';
+	END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table user
+-- ----------------------------
+DROP TRIGGER IF EXISTS `用户名不能重复——更新`;
+delimiter ;;
+CREATE TRIGGER `用户名不能重复——更新` BEFORE UPDATE ON `user` FOR EACH ROW BEGIN
+	IF EXISTS (
+		SELECT *
+		FROM user u
+		WHERE u.Account = NEW.Account AND OLD.UserId != u.UserId
+	)THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '用户名称重复';
+	END IF;
 END
 ;;
 delimiter ;
@@ -393,28 +752,3 @@ END
 delimiter ;
 
 SET FOREIGN_KEY_CHECKS = 1;
-
--- ----------------------------
--- 创建Admin和Worker角色的权限
--- ----------------------------
-CREATE USER `Admin`@`%` IDENTIFIED WITH mysql_native_password;
-GRANT `root`@`localhost` TO `Admin`@`%`;
-SET DEFAULT ROLE `root`@`localhost` TO `Admin`@`%`;
-GRANT Alter, Alter Routine, Create, Create Routine, Create Temporary Tables, Create User, Create View, Delete, Drop, Event, Execute, File, Grant Option, Index, Insert, Lock Tables, Process, References, Reload, Replication Client, Replication Slave, Select, Show Databases, Show View, Shutdown, Super, Trigger, Update ON *.* TO `Admin`@`%`;
-
-CREATE USER `Worker`@`%` IDENTIFIED WITH mysql_native_password;
-GRANT Select ON TABLE `2024_database`.`batch` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`department` TO `Worker`@`%`;
-GRANT Delete, Insert, Select, Update ON TABLE `2024_database`.`interviewscore` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`interviewscore_view` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`major` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`major_view` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`scoringcriteria` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`student` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`student_view` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`teacher` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`teacher_view` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`totalscoreview` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`weight` TO `Worker`@`%`;
-GRANT Delete, Insert, Select, Update ON TABLE `2024_database`.`writtentestscore` TO `Worker`@`%`;
-GRANT Select ON TABLE `2024_database`.`writtentestscore_view` TO `Worker`@`%`;
