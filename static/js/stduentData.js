@@ -186,11 +186,13 @@ $(document).on("click", ".edit-btn",async function () {
 
     // 动态生成新增数据输入框
     await $("#edit-fields").empty();
-    await $("#data-table th label").each(async function(index){
-        // 获取th控件下的label为列名
-        const columnName = $(this).text().trim();
+    // 获取所有列名的标签
+    const headers = $("#data-table th label").toArray();
+    for (const [index, element] of headers.entries()) {
+        const columnName = $(element).text().trim();
+        console.log(columnName);
         if (columnName === "操作" || forbbiden_columns.includes(columnName)) {
-            return;
+            continue;
         }
 
         // 检查是否为下拉框还是为输入框
@@ -206,28 +208,27 @@ $(document).on("click", ".edit-btn",async function () {
         });
         const dropdown = await isdropdown.json();
         if (dropdown.ty === "dropdown"){
+            const selectId = `select-${columnName}`;
             $("#edit-fields").append(`
             <label>${columnName}:</label>
-            <select name="${columnName}" id="select-${columnName}" class="form-data">
+            <select name="${columnName}" id="${selectId}" class="form-data">
             `);
-            let selectElement = document.getElementById(`select-${columnName}`);
-            selectElement.innerHTML = "";
-            await dropdown.content.forEach(function(item){
-                let option = document.createElement("option");
+            const selectElement = document.getElementById(selectId);
+            dropdown.content.forEach((item) => {
+                const option = document.createElement("option");
                 option.value = item;
                 option.textContent = item;
-                selectElement.appendChild(option);
-                // 设置被选择的值
-                if (item === rowData[columnName]){
-                    option.selected = true;
+                if (item === rowData[columnName]) {
+                    option.selected = true; // 设置被选择的值
                 }
+                selectElement.appendChild(option);
             });
         }else{
-            // 如果是id的话就只显示一个不能编辑的输入框
+            // 如果是id的话给id上一个原本的id
             if(index === 0){
                 $("#edit-fields").append(`
                 <label>${columnName}:</label>
-                <input type="text" name="${columnName}" id="input-${columnName}" value="${rowData[columnName]}" readonly class="form-data">
+                <input type="text" name="${columnName}" id="input-${columnName}" value="${rowData[columnName]}" old="${rowData[columnName]}" class="form-data">
                 `);
             }else{
                 $("#edit-fields").append(`
@@ -235,9 +236,8 @@ $(document).on("click", ".edit-btn",async function () {
                 <input type="text" name="${columnName}" id="input-${columnName}" value="${rowData[columnName]}" class="form-data">
                 `);
             }
-
         };
-    });
+    };
     $("#edit-modal").show();
 });
 
@@ -249,7 +249,8 @@ $("#save_edit").click(async function(){
     });
     const tableName = $("#table-select").val();
     const primaryKey = Object.keys(formData)[0];
-    const primaryKeyValue = formData[primaryKey];
+    // 主键取第一个的old参数
+    const primaryKeyValue = $(`#input-${primaryKey}`).attr("old");
     if (!tableName || !primaryKey || !primaryKeyValue) {
         alert("表名或主键信息缺失！");
         return;
@@ -330,68 +331,47 @@ $("#add-btn").click(async function(){
     // 动态生成新增数据输入框——防止来不及消除
     await $("#add-fields").empty();
 
-    // 如果是复试打分的需要另外构建一个窗口
-    if (tableName === "interviewscore_view"){
-        await $("#data-table th label").each(async function(index){
-            const columnName = $(this).text().trim();
-            if(index===0||columnName==="操作"||forbbiden_columns.includes(columnName) || columnName==="Score"||columnName==="CriteriaName"){
-                return;
+    const headers = $("#data-table th label").toArray();
+    for (const header of headers) {
+        const columnName = $(header).text().trim();
+        if ((headers.indexOf(header) === 0 && tableName != "student_view") || columnName === "操作" || forbbiden_columns.includes(columnName)) {
+            // 跳过 id 列，不需要新增数据
+            continue;
+        }
+        // 检查是否为下拉框还是为输入框
+        const isdropdown = await fetch(`${API_BASE}/api/get_dropdown`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                table: tableName.trim(),
+                column: columnName,
+            }),
+        });
+        const dropdown = await isdropdown.json();
+        if (dropdown.ty === "dropdown"){
+            const selectId = `select-${columnName}`;
+            $("#add-fields").append(`
+            <label>${columnName}:</label>
+            <select name="${columnName}" id="${selectId}" class="form-data">
+            `);
+            let selectElement = document.getElementById(selectId);
+            if (selectElement) {
+            dropdown.content.forEach(function (item) {
+                const option = document.createElement("option");
+                option.value = item;
+                option.textContent = item;
+                selectElement.appendChild(option);
+                });
             }
+        }else{
             $("#add-fields").append(`
             <label>${columnName}:</label>
             <input type="text" name="${columnName}" id="input-${columnName}" class="form-data">
             `);
-        });
-        // 然后开始生成所有criteria的分数选项
-        const criteriaNames = await fetch(`${API_BASE}/api/get_criteria`);
-        const criteria = await criteriaNames.json();
-        criteria.forEach(function(item){
-            $("#add-fields").append(`
-            <label>${item}:</label>
-            <input type="number" name="${item}" id="input-${item}" class="form-data">
-            `);
-        });
-    }else{
-        await $("#data-table th label").each(async function(index){
-            const columnName = $(this).text().trim();
-            if (index === 0 || columnName === "操作" || forbbiden_columns.includes(columnName)) {
-                // 跳过 id 列，不需要新增数据
-                return;
-            }
-            // 检查是否为下拉框还是为输入框
-            const isdropdown = await fetch(`${API_BASE}/api/get_dropdown`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    table: tableName.trim(),
-                    column: columnName,
-                }),
-            });
-            const dropdown = await isdropdown.json();
-            if (dropdown.ty === "dropdown"){
-                $("#add-fields").append(`
-                <label>${columnName}:</label>
-                <select name="${columnName}" id="select-${columnName}" class="form-data">
-                `);
-                let selectElement = document.getElementById(`select-${columnName}`);
-                selectElement.innerHTML = "";
-                console.log(dropdown.content);
-                await dropdown.content.forEach(function(item){
-                    let option = document.createElement("option");
-                    option.value = item;
-                    option.textContent = item;
-                    selectElement.appendChild(option);
-                });
-            }else{
-                $("#add-fields").append(`
-                <label>${columnName}:</label>
-                <input type="text" name="${columnName}" id="input-${columnName}" class="form-data">
-                `);
-            };
-        });
-    }
+        };
+    };
     $('#add-modal').show();
 });
 

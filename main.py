@@ -8,6 +8,7 @@ from config import outkey,forbidden_keys
 import config
 from utils.query import tprint
 import json
+import datetime
 
 app = Flask(__name__)
 app.secret_key = "dkp"
@@ -71,7 +72,7 @@ def register():
         else:
             sql = f"INSERT INTO user VALUES (NULL,'Worker','{username}','{password}',NULL,'{email}')"
             query.update(sql)
-            msg = 'You have successfully registered!'
+            msg = '成功注册！'
     elif request.method == 'POST':
         # 表单为空，没有post数据
         msg = 'Please fill out the form!'
@@ -114,10 +115,18 @@ def get_data():
         tprint(sql)
         result = query.query(sql,session)
         sql = f"DESCRIBE {table}"
+        # 如果是timedelta，则需要转换成字符串
+        for row in result:
+            for key, value in row.items():
+                if isinstance(value, datetime.timedelta):
+                    row[key] = str(value)
+                if isinstance(value, datetime.date):
+                    row[key] = value.strftime("%Y-%m-%d")
+
         columns = [col['Field'] for col in query.query(sql,session)]
         return jsonify({'columns':columns,'data':result}),200
     except Exception as e:
-        return jsonify({"message":str(e)}),400
+        return jsonify({"message": f"获取数据出错——{str(e)}"}), 400
 
 @app.route('/api/update_data',methods=['POST'])
 def update_data():
@@ -178,28 +187,7 @@ def add_data():
         table = tableNames.get(data.get('table'))[1]
         insert_data = data.get('data')
 
-        # 判断是否是复试打分表
-        if table == "interviewscore":
-            # 先取出其中的studentid和teacherid
-            sid = insert_data.pop("StudentId")
-            tid = insert_data.pop("TeacherId")
-            # 生成不同criteria的insert_data语句
-            insert_datas = []
-            # 这里需要拿到所有评分标准的id
-            for key, value in insert_data.items():
-                # 将外键进行转换
-                insert_data1 = {"StudentId":sid,"TeacherId":tid,"CriteriaName":key,"score":value}
-                insert_data2 = query.view_to_table(table,insert_data1,session)
-                criteriaid = insert_data2["CriteriaId"]
-                # 需要进行判断对应的CriteriaName是否已经存在
-                sql = f"SELECT * FROM {table} WHERE CriteriaId={query.value_change(criteriaid)} AND StudentId ={query.value_change(sid)}"
-                is_exist = query.query(sql,session)
-                # 如果不存在或值为空则不输入
-                if is_exist or value == "":
-                    continue
-                insert_datas.append(insert_data2)
-        else:
-            insert_datas = [insert_data]
+        insert_datas = [insert_data]
 
         if not all([table, insert_datas]):
             return jsonify({"message": "Missing required fields"}), 400
@@ -277,13 +265,6 @@ def is_editable():
         return jsonify({"isEditable":True})
     else:
         return jsonify({"isEditable":False})
-
-# 获取所有评分选项
-@app.route("/api/get_criteria",methods=["GET"])
-def get_criteria():
-    sql = "SELECT CriteriaName FROM scoringcriteria"
-    result = [value['CriteriaName'] for value in query.query(sql,session)]
-    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=False)

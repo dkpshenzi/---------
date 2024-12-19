@@ -62,8 +62,7 @@ def update(sql,session=None):
 def isAdmin(account):
     sql = f"SELECT Role FROM user WHERE Account='{account}'"
     result = query(sql)[0]
-    if result['Role'] == 'Admin':
-        tprint("管理员查询")
+
     return result['Role'] == 'Admin'
 
 # 返回对应的查询配置

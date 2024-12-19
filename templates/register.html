@@ -8,26 +8,26 @@
     </head>
     <body>
         <div class="register">
-            <h1>Register</h1>
+            <h1>注册</h1>
             <div class="links">
-                <a href="{{ url_for('login') }}">Login</a>
-				<a href="{{ url_for('register') }}" class="active">Register</a>
+                <a href="{{ url_for('login') }}">登录</a>
+				<a href="{{ url_for('register') }}" class="active">注册</a>
             </div>
             <form action="{{ url_for('register') }}" method="POST" autocomplete="off">
                 <label for="username">
                     <i class="fas fa-user"></i>
                 </label>
-                <input type="text" id="username" name="username" placeholder="Username" required>
+                <input type="text" id="username" name="username" placeholder="账户名" required>
                 <label for="password">
                     <i class="fas fa-lock"></i>
                 </label>
-                <input type="password" id="password" name="password" placeholder="Password" required>
+                <input type="password" id="password" name="password" placeholder="密码" required>
                 <label for="email">
                     <i class="fas fa-envelope"></i>
                 </label>
-                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="email" id="email" name="email" placeholder="邮箱" required>
                 <div class="msg">{{ msg }}</div>
-                <input type="submit" value="Register">
+                <input type="submit" value="注册">
             </form>
         </div>
     </body>
